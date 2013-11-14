@@ -417,7 +417,7 @@ static Surface *TryPNG(FILE *inFile,const uint8 *inData, int inDataLen)
       int * ipalette;
       ipalette = (int *) malloc(sizeof(int)*num_palette);
 
-      result = new SimpleSurface(width,height, bit_depth <= 4 ? pfIDX4 : bit_depth <= 8 ? pfIDX8 );
+      result = new SimpleSurface(width,height, bit_depth <= 4 ? pfIDX4 : pfIDX8 );
       result->IncRef();
       for (short i = 0;  i < num_palette;  ++i){
                            ipalette[i] = 
