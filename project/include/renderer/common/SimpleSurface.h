@@ -14,11 +14,10 @@ namespace nme {
 			
 			SimpleSurface (int inWidth, int inHeight, PixelFormat inPixelFormat, int inByteAlign = 4, int inGPUPixelFormat = -1);
 			
-//#ifdef USE_PALETTE
 			void setClut(int inClutSize, int *inClutPtr);
 			void * getClut(){ return (void*) mClutPtr;};
 			int getClutSize(){ return mClutSize;};
-//#endif
+
 			virtual void BlitChannel (const RenderTarget &outTarget, const Rect &inSrcRect, int inPosX, int inPosY, int inSrcChannel, int inDestChannel) const;
 			virtual void BlitTo (const RenderTarget &outTarget, const Rect &inSrcRect,int inPosX, int inPosY, BlendMode inBlend, const BitmapCache *inMask, uint32 inTint = 0xffffff) const;
 			virtual void colorTransform (const Rect &inRect, ColorTransform &inTransform);
@@ -67,10 +66,9 @@ namespace nme {
 			int mStride;
 			int mWidth;
 
-//#ifdef USE_PALETTE
 			int *mClutPtr; 
 			int mClutSize;
-//#endif		
+		
 		private:
 			
 			SimpleSurface (const SimpleSurface &inRHS);

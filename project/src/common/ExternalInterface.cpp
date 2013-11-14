@@ -3239,16 +3239,14 @@ value nme_bitmap_data_copy(value inSource, value inSourceRect, value inTarget, v
 
       AutoSurfaceRender render(dest);
 
-//#ifdef USE_PALETTE
-      //CLUT COPY
+      //Clut copy
       if(source->Format()==pfIDX8 ){
-        dest->setGPUFormat(pfIDX8);
-        dest->setClut( source->getClutSize(), (int *)source->getClut() );
+          dest->setGPUFormat(pfIDX8);
+          dest->setClut( source->getClutSize(), (int *)source->getClut() );
       }else if(source->Format()==pfIDX4){
-        dest->setGPUFormat(pfIDX4);
-        dest->setClut( source->getClutSize(), (int *)source->getClut() );
+          dest->setGPUFormat(pfIDX4);
+          dest->setClut( source->getClutSize(), (int *)source->getClut() );
       }
-//#endif
             
       BlendMode blend = val_bool(inMergeAlpha) ? bmNormal : bmCopy;
       source->BlitTo(render.Target(),rect,offset.x, offset.y, blend, 0);
@@ -3616,29 +3614,20 @@ value nme_render_surface_to_surface(value* arg, int nargs)
    Surface *src;
    if (AbstractToObject(arg[aTarget],surf) && AbstractToObject(arg[aSurface],src))
    {
-   
-   
-//#ifdef USE_PALETTE
-
       if(src->Format()==pfIDX8 || src->Format()==pfIDX4){
-
-         //printf("ExternalInterface: Warning: slow conversion IDX to RGB\n");
-
-         Surface *result = new SimpleSurface( src->Width(), src->Height() , pfXRGB, 1, -1);//, format, 1, gpu );
+          //printf("ExternalInterface: Warning: slow conversion IDX to RGB\n");
+          Surface *result = new SimpleSurface( src->Width(), src->Height() , pfXRGB, 1, -1);//, format, 1, gpu );
      
-
-         for (int y=0; y < src->Height(); y++)
-         {
-             for (int x=0; x < src->Width(); x++)
-             {
+          for (int y=0; y < src->Height(); y++)
+          {
+              for (int x=0; x < src->Width(); x++)
+              {
                   uint32 pixel = src->getPixel(x, y);
                   result->setPixel(x, y, pixel, true);
-                  //printf("%d,%d : 0x%x",x,y,pixel);
-             }  
-         } 
-      src = result;
+              }  
+          } 
+          src = result;
       }
-//#endif
 	
       Rect r(surf->Width(),surf->Height());
       if (!val_is_null(arg[aClipRect]))
