@@ -402,8 +402,9 @@ static Surface *TryPNG(FILE *inFile,const uint8 *inData, int inDataLen)
    png_get_IHDR(png_ptr, info_ptr, &width, &height, &bit_depth, &color_type,
        &interlace_type, NULL, NULL);
 
-   //Open as palette
+   
    if( color_type == PNG_COLOR_TYPE_PALETTE){
+      //Open as palette
       png_colorp    palette;
       int num_palette;
       //printf("GRR ReadPNG:  PNG_COLOR_TYPE_PALETTE\n");
@@ -416,7 +417,7 @@ static Surface *TryPNG(FILE *inFile,const uint8 *inData, int inDataLen)
       int * ipalette;
       ipalette = (int *) malloc(sizeof(int)*num_palette);
 
-      result = new SimpleSurface(width,height, bit_depth <= 4 ? pfIDX4 : pfIDX8 );
+      result = new SimpleSurface(width,height, bit_depth <= 4 ? pfIDX4 : bit_depth <= 8 ? pfIDX8 );
       result->IncRef();
       for (short i = 0;  i < num_palette;  ++i){
                            ipalette[i] = 
@@ -442,48 +443,49 @@ static Surface *TryPNG(FILE *inFile,const uint8 *inData, int inDataLen)
          
 	}else{
 
-      bool has_alpha = color_type== PNG_COLOR_TYPE_GRAY_ALPHA ||
-                       color_type==PNG_COLOR_TYPE_RGB_ALPHA;
-      /* Add filler (or alpha) byte (before/after each RGB triplet) */
-      png_set_expand(png_ptr);
-      png_set_filler(png_ptr, 0xff, PNG_FILLER_AFTER);
-      //png_set_gray_1_2_4_to_8(png_ptr);
-      png_set_palette_to_rgb(png_ptr);
-      png_set_gray_to_rgb(png_ptr);
+   bool has_alpha = color_type== PNG_COLOR_TYPE_GRAY_ALPHA ||
+                    color_type==PNG_COLOR_TYPE_RGB_ALPHA;
+   /* Add filler (or alpha) byte (before/after each RGB triplet) */
+   png_set_expand(png_ptr);
+   png_set_filler(png_ptr, 0xff, PNG_FILLER_AFTER);
+   //png_set_gray_1_2_4_to_8(png_ptr);
+   png_set_palette_to_rgb(png_ptr);
+   png_set_gray_to_rgb(png_ptr);
 
-      // Stripping 16 bits per channel to 8 bits per channel.
-      if (bit_depth == 16)
-         png_set_strip_16(png_ptr);
+   // Stripping 16 bits per channel to 8 bits per channel.
+   if (bit_depth == 16)
+      png_set_strip_16(png_ptr);
 
-      if (!gC0IsRed)
-         png_set_bgr(png_ptr);
+   if (!gC0IsRed)
+      png_set_bgr(png_ptr);
 
-      result = new SimpleSurface(width,height, (has_alpha) ? pfARGB : pfXRGB);
-      result->IncRef();
-      target = result->BeginRender(Rect(width,height));
-      
-      /* if the image is interlaced, run multiple passes */
-      int number_of_passes = png_set_interlace_handling(png_ptr);
-      
-      for (int pass = 0; pass < number_of_passes; pass++)
+   result = new SimpleSurface(width,height, (has_alpha) ? pfARGB : pfXRGB);
+   result->IncRef();
+   target = result->BeginRender(Rect(width,height));
+   
+   /* if the image is interlaced, run multiple passes */
+   int number_of_passes = png_set_interlace_handling(png_ptr);
+   
+   for (int pass = 0; pass < number_of_passes; pass++)
+   {
+      for (int i = 0; i < height; i++)
       {
-         for (int i = 0; i < height; i++)
-         {
-            png_bytep anAddr = (png_bytep) target.Row(i);
-            png_read_rows(png_ptr, (png_bytepp) &anAddr, NULL, 1);
-         }
+         png_bytep anAddr = (png_bytep) target.Row(i);
+         png_read_rows(png_ptr, (png_bytepp) &anAddr, NULL, 1);
       }
+   }
 
-      result->EndRender();
+   result->EndRender();
 
-      /* read rest of file, and get additional chunks in info_ptr - REQUIRED */
-      png_read_end(png_ptr, info_ptr);
+   /* read rest of file, and get additional chunks in info_ptr - REQUIRED */
+   png_read_end(png_ptr, info_ptr);
 
-      /* clean up after the read, and free any memory allocated - REQUIRED */
-      png_destroy_read_struct(&png_ptr, &info_ptr, (png_infopp)NULL);
+   /* clean up after the read, and free any memory allocated - REQUIRED */
+   png_destroy_read_struct(&png_ptr, &info_ptr, (png_infopp)NULL);
 
-      /* that's it */
-      return result;
+   /* that's it */
+   return result;
+
    }
 }
 

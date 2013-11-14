@@ -3238,7 +3238,7 @@ value nme_bitmap_data_copy(value inSource, value inSourceRect, value inTarget, v
       FromValue(offset,inOffset);
 
       AutoSurfaceRender render(dest);
-
+      
       //Clut copy
       if(source->Format()==pfIDX8 ){
           dest->setGPUFormat(pfIDX8);
