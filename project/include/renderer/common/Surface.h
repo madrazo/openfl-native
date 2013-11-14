@@ -21,6 +21,11 @@ namespace nme {
 		public:
 			
 			Surface () : mTexture (0), mVersion (0), mFlags (SURF_FLAGS_NOT_REPEAT_IF_NON_PO2), mAllowTrans (true) {}; // Non-PO2 will generate dodgy repeating anyhow...
+
+#ifdef USE_PALETTE
+			virtual void * getClut(){ return 0; };
+			virtual int getClutSize(){ return 0; };
+#endif
 			
 			virtual RenderTarget BeginRender (const Rect &inRect, bool inForHitTest = false) = 0;
 			virtual void BlitChannel (const RenderTarget &outTarget, const Rect &inSrcRect, int inPosX, int inPosY, int inSrcChannel, int inDestChannel) const = 0;
@@ -70,6 +75,10 @@ namespace nme {
 			Texture *GetTexture () { return mTexture; }
 			Surface *IncRef () { mRefCount++; return this; }
 			const uint8 *Row (int inY) const { return GetBase () + GetStride () * inY; }
+
+#ifdef USE_PALETTE
+			virtual void setClut(int inClutSize, int *inClutPtr){};
+#endif
 			int Version () const { return mVersion; }
 		
 		protected:
