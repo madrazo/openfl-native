@@ -23,12 +23,12 @@ enum PixelFormat
    pfARGB4444     = 0x11,
    pfRGB565       = 0x12,
 
-#ifdef USE_PALETTE
-   pfIDX4        = 0x21,  //palettized formats
+//#ifdef USE_PALETTE
+   pfIDX4         = 0x21,  //palettized formats
    pfIDX8         = 0x22,
    pfIDX16        = 0x23,
    pfIDX32        = 0x24,
-#endif
+//#endif
    
    pfHasAlpha     = 0x01,
    pfSwapRB       = 0x02,

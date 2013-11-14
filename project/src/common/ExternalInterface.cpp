@@ -3239,16 +3239,16 @@ value nme_bitmap_data_copy(value inSource, value inSourceRect, value inTarget, v
 
       AutoSurfaceRender render(dest);
 
-#ifdef USE_PALETTE
+//#ifdef USE_PALETTE
       //CLUT COPY
       if(source->Format()==pfIDX8 ){
-        dest->setFormat(pfIDX8);
+        dest->setGPUFormat(pfIDX8);
         dest->setClut( source->getClutSize(), (int *)source->getClut() );
       }else if(source->Format()==pfIDX4){
-        dest->setFormat(pfIDX4);
+        dest->setGPUFormat(pfIDX4);
         dest->setClut( source->getClutSize(), (int *)source->getClut() );
       }
-#endif
+//#endif
             
       BlendMode blend = val_bool(inMergeAlpha) ? bmNormal : bmCopy;
       source->BlitTo(render.Target(),rect,offset.x, offset.y, blend, 0);
@@ -3618,7 +3618,7 @@ value nme_render_surface_to_surface(value* arg, int nargs)
    {
    
    
-#ifdef USE_PALETTE
+//#ifdef USE_PALETTE
 
       if(src->Format()==pfIDX8 || src->Format()==pfIDX4){
 
@@ -3638,7 +3638,7 @@ value nme_render_surface_to_surface(value* arg, int nargs)
          } 
       src = result;
       }
-#endif
+//#endif
 	
       Rect r(surf->Width(),surf->Height());
       if (!val_is_null(arg[aClipRect]))

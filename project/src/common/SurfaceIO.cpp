@@ -407,7 +407,7 @@ static Surface *TryPNG(FILE *inFile,const uint8 *inData, int inDataLen)
   //printf("GRR ReadPNG:  width = %d, height = %d\n", width, height);
 
 
-#ifdef USE_PALETTE
+//#ifdef USE_PALETTE
 /******************/
    //Add support for palette (CLUT) @@@Bamtang
 
@@ -469,7 +469,7 @@ static Surface *TryPNG(FILE *inFile,const uint8 *inData, int inDataLen)
 
 	}else{
 
-#endif
+//#endif
          
 /******************/
 
@@ -515,9 +515,9 @@ static Surface *TryPNG(FILE *inFile,const uint8 *inData, int inDataLen)
 
    /* that's it */
    return result;
-#ifdef USE_PALETTE
+//#ifdef USE_PALETTE
    }
-#endif
+//#endif
 }
 
 static bool EncodePNG(Surface *inSurface, ByteArray *outBytes)

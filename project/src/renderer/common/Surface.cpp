@@ -72,8 +72,10 @@ namespace nme {
 			mTexture = inHardware.CreateTexture (this, mFlags);
 		
 		return mTexture;
+
 		
 	}
+
 	
 	
 }
